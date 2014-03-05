@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".CheckEIActivity" >
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/SearchWord1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:ems="30"
+            android:hint="@string/sw1_hint" />
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dip"
+            android:text="@string/search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dataLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchLayout"
+        android:background="@drawable/btn"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/titleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/acNumber" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="20124715700680" />
+
+        <TextView
+            style="@style/titleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Android botnets on the rise: Trends and characteristics" />
+
+        <TextView
+            style="@style/titleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/authors" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pieterse, Heloise1 ; Olivier, Martin S.2 " />
+
+        <TextView
+            style="@style/titleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/docType" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Conference article (CA)" />
+
+        <TextView
+            style="@style/titleText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/conName" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="2012 Conference on Information Security for South Africa, ISSA 2012" />
+    </LinearLayout>
+
+</RelativeLayout>
