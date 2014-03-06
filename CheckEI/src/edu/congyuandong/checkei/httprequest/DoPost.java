@@ -8,7 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 public class DoPost {
-	private static String url_up = "http://192.168.1.102:8080/CheckEI/doPost.jsp";
+	private static String url_up = "http://elib.hrbeu.edu.cn/CheckEI/doPost.jsp";
 	private static final String TAG_MESSAGE = "message";
 	JSONParser jsonParser = new JSONParser();
 
