@@ -7,10 +7,10 @@
     <string name="search">SEARCH</string>
     <string name="sw1_hint">Enter title</string>
     
-    <string name="acNumber">Accession number:</string>
-    <string name="title">Title:</string>
-    <string name="authors">Authors:</string>
-    <string name="docType">Document type:</string>
-    <string name="conName">Conerence name:</string>
+    <string name="acNumber">Accession number</string>
+    <string name="title">Title</string>
+    <string name="authors">Authors</string>
+    <string name="docType">Document type</string>
+    <string name="conName">Conerence name</string>
 
 </resources>

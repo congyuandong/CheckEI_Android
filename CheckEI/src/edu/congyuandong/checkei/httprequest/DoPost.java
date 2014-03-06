@@ -15,17 +15,18 @@ public class DoPost {
 	public String RequestPost(String searchWord1) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("SearchWord1", searchWord1));
+		String message = "";
 
 		try {
 			JSONObject json = jsonParser
 					.makeHttpRequest(url_up, "POST", params);
-			String message = json.getString(TAG_MESSAGE);
+			 message = json.getString(TAG_MESSAGE);
 			System.out.println(message);
 			return message;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			return "SORRY";
 		}
 	}
 
