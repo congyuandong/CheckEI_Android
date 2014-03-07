@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:padding="8dip" >
 
-        <EditText
+        <!--EditText
             android:id="@+id/SearchWord1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,18 @@
             android:hint="@string/sw1_hint"
             android:singleLine="true"
             android:textColor="#95A5A6"
-            android:textColorHint="#95A5A6" />
+            android:textColorHint="#95A5A6" /-->
+        <AutoCompleteTextView
+            android:id="@+id/SearchWord1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edi"
+            android:ems="30"
+            android:hint="@string/sw1_hint"
+            android:singleLine="true"
+            android:completionThreshold="1"
+            android:textColor="#95A5A6"
+            android:textColorHint="#95A5A6" />    
 
         <Button
             android:id="@+id/btn_search"

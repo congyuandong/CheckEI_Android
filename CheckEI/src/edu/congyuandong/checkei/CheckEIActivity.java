@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
+import edu.congyuandong.checkei.util.SystemSettings;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,7 +27,7 @@ import android.widget.Toast;
 public class CheckEIActivity extends Activity implements OnClickListener {
 
 	private Button btn_Search;
-	private EditText searchWord1;
+	private AutoCompleteTextView searchWord1;
 	private TextView acNumber, title, authors, docType, conName;
 	private String str_acNumber, str_title, str_authors, str_docType,
 			str_conName;
@@ -43,11 +46,37 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		viewBind();
 		dataLayout.setVisibility(View.GONE);
 		scrollView.setVisibility(View.GONE);
+		fillAutoTextView();
+	}
+
+	private void fillAutoTextView() {
+		String[] titles = new String[] {
+				SystemSettings.getSettingMessage(this, "SHARE_sw1", ""),
+				SystemSettings.getSettingMessage(this, "SHARE_sw2", ""),
+				SystemSettings.getSettingMessage(this, "SHARE_sw3", "") };
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, titles);
+		searchWord1.setAdapter(adapter);
+	}
+
+	private void saveSearchWord(String searchWord) {
+		if ((!searchWord.equals(SystemSettings.getSettingMessage(this,
+				"SHARE_sw3", "")))
+				&& (!searchWord.equals(SystemSettings.getSettingMessage(this,
+						"SHARE_sw2", "")))) {
+			SystemSettings.setSettingMessage(this, "SHARE_sw1",
+					SystemSettings.getSettingMessage(this, "SHARE_sw2", ""));
+			SystemSettings.setSettingMessage(this, "SHARE_sw2",
+					SystemSettings.getSettingMessage(this, "SHARE_sw3", ""));
+			SystemSettings.setSettingMessage(this, "SHARE_sw3", searchWord);
+
+		}
+
 	}
 
 	private void viewBind() {
 		btn_Search = (Button) findViewById(R.id.btn_search);
-		searchWord1 = (EditText) findViewById(R.id.SearchWord1);
+		searchWord1 = (AutoCompleteTextView) findViewById(R.id.SearchWord1);
 		acNumber = (TextView) findViewById(R.id.acNumber);
 		title = (TextView) findViewById(R.id.title);
 		authors = (TextView) findViewById(R.id.authors);
@@ -71,8 +100,12 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		case R.id.btn_search:
 			// 隐藏键盘
 			hideInput();
-			//加载进度条
+			// 加载进度条
 			startProcessDialog();
+			// 保存历史查询数据
+			String search = searchWord1.getText().toString();
+			saveSearchWord(search);
+			fillAutoTextView();
 			Thread getData_thread = new Thread(getData);
 			getData_thread.start();
 			break;
@@ -84,6 +117,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		public void run() {
 			DoPost post = new DoPost();
 			String search = searchWord1.getText().toString();
+			// saveSearchWord(search);
 			if (search.equals("")) {
 				// System.out.println("输入为空");
 				showMsg("不要调戏我了，什么都没有嘛～");
@@ -108,11 +142,15 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 	private void setContext(JSONObject jobj) {
 		try {
-			str_acNumber = jobj.getString("Accession number:");
-			str_title = jobj.getString("Title:");
-			str_authors = jobj.getString("Authors:");
-			str_docType = jobj.getString("Document type:");
-			if(jobj.has("Conference name:"))
+			if (jobj.has("Accession number:"))
+				str_acNumber = jobj.getString("Accession number:");
+			if (jobj.has("Title:"))
+				str_title = jobj.getString("Title:");
+			if (jobj.has("Authors:"))
+				str_authors = jobj.getString("Authors:");
+			if (jobj.has("Document type:"))
+				str_docType = jobj.getString("Document type:");
+			if (jobj.has("Conference name:"))
 				str_conName = jobj.getString("Conference name:");
 			stopProcessDialog();
 			handler.post(setContextThread);

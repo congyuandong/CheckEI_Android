@@ -14,6 +14,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +26,7 @@ import android.util.Log;
 public class JSONParser {
 	static InputStream is = null;
     static JSONObject jObj = null;
+    private HttpParams httpParameters;
     static String json = "";
     // constructor
     public JSONParser() {
@@ -36,9 +40,13 @@ public class JSONParser {
         try {    
                 // request method is POST
                 // defaultHttpClient
-                DefaultHttpClient httpClient = new DefaultHttpClient();
+        		httpParameters = new BasicHttpParams();
+        		HttpConnectionParams.setConnectionTimeout(httpParameters, 60000);
+        		HttpConnectionParams.setSoTimeout(httpParameters, 60000);
+                DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
                 HttpPost httpPost = new HttpPost(url);
                 httpPost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+                
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();                
