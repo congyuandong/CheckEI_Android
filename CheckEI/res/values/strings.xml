@@ -11,6 +11,6 @@
     <string name="title">Title</string>
     <string name="authors">Authors</string>
     <string name="docType">Document type</string>
-    <string name="conName">Conerence name</string>
+    <string name="conName">Conference name</string>
 
 </resources>
