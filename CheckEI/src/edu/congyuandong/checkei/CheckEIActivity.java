@@ -3,6 +3,7 @@ package edu.congyuandong.checkei;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	Handler handler = new Handler();
 	private LinearLayout dataLayout;
 	private ScrollView scrollView;
+	private CustomProgressDialog progressDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,10 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_search:
-			//隐藏键盘
-			hideInput();	
+			// 隐藏键盘
+			hideInput();
+			//加载进度条
+			startProcessDialog();
 			Thread getData_thread = new Thread(getData);
 			getData_thread.start();
 			break;
@@ -94,6 +98,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 						e.printStackTrace();
 					}
 				} else {
+					stopProcessDialog();
 					showMsg("似乎还没有您要找的信息");
 				}
 			}
@@ -107,8 +112,9 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 			str_title = jobj.getString("Title:");
 			str_authors = jobj.getString("Authors:");
 			str_docType = jobj.getString("Document type:");
-			if (str_docType.indexOf("Conference") != -1)
+			if(jobj.has("Conference name:"))
 				str_conName = jobj.getString("Conference name:");
+			stopProcessDialog();
 			handler.post(setContextThread);
 
 		} catch (JSONException e) {
@@ -149,14 +155,34 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	private void myToast(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	/**
 	 * 隐藏输入键盘
 	 */
-	private void hideInput(){
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-		if(imm.isActive())
-			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+	private void hideInput() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm.isActive())
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+					InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
+	/**
+	 * 打开自定义加载
+	 */
+	private void startProcessDialog() {
+		if (progressDialog == null) {
+			progressDialog = CustomProgressDialog.createDialog(this);
+			progressDialog.show();
+		}
+	}
+
+	/**
+	 * 关闭自定义加载
+	 */
+	private void stopProcessDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
+	}
 }
