@@ -7,12 +7,16 @@ import edu.congyuandong.checkei.httprequest.DoPost;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
+import android.content.Context;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,8 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	private String str_acNumber, str_title, str_authors, str_docType,
 			str_conName;
 	Handler handler = new Handler();
+	private LinearLayout dataLayout;
+	private ScrollView scrollView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +38,9 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.check_ei);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.title_bar);
-
 		viewBind();
-
+		dataLayout.setVisibility(View.GONE);
+		scrollView.setVisibility(View.GONE);
 	}
 
 	private void viewBind() {
@@ -46,6 +52,8 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		docType = (TextView) findViewById(R.id.docType);
 		conName = (TextView) findViewById(R.id.conName);
 		btn_Search.setOnClickListener(this);
+		dataLayout = (LinearLayout) findViewById(R.id.dataLayout);
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
 	}
 
 	@Override
@@ -59,6 +67,8 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_search:
+			//隐藏键盘
+			hideInput();	
 			Thread getData_thread = new Thread(getData);
 			getData_thread.start();
 			break;
@@ -97,8 +107,8 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 			str_title = jobj.getString("Title:");
 			str_authors = jobj.getString("Authors:");
 			str_docType = jobj.getString("Document type:");
-			if(str_docType.indexOf("Conference")!=-1)
-				str_conName = jobj.getString("Conerence name:");
+			if (str_docType.indexOf("Conference") != -1)
+				str_conName = jobj.getString("Conference name:");
 			handler.post(setContextThread);
 
 		} catch (JSONException e) {
@@ -111,6 +121,8 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void run() {
+			dataLayout.setVisibility(View.VISIBLE);
+			scrollView.setVisibility(View.VISIBLE);
 			acNumber.setText(str_acNumber);
 			title.setText(str_title);
 			authors.setText(str_authors);
@@ -136,6 +148,15 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 	private void myToast(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * 隐藏输入键盘
+	 */
+	private void hideInput(){
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+		if(imm.isActive())
+			imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 }
