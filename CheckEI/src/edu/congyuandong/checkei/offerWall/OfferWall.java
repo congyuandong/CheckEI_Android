@@ -11,10 +11,10 @@ import cn.domob.data.OManager.ConsumeStatus;
 public class OfferWall {
 
 	private static final String PUBLISHID = "96ZJ2b8QzehB3wTAwQ";
-	private static final String userId = "";
+	//private static final String userId = "1";
 	private OManager mManager;
 
-	public OfferWall(Context mContext) {
+	public OfferWall(Context mContext,String userId) {
 		mManager = new OManager(mContext, PUBLISHID, userId);
 	}
 

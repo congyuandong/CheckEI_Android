@@ -9,6 +9,7 @@ import com.umeng.fb.FeedbackAgent;
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
 import edu.congyuandong.checkei.offerWall.OfferWall;
+import edu.congyuandong.checkei.util.GetStatus;
 import edu.congyuandong.checkei.util.SystemSettings;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,6 +60,13 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 		// 填充自动完成输入框
 		fillAutoTextView();
+
+		GetStatus gs = new GetStatus();
+		SystemSettings.setSettingMessage(mContext, "SEARCHEI_USERID",
+				gs.getIMEI(mContext)+"_EIS");
+		//System.out.println(gs.getIMEI(mContext));
+		// SystemSettings.setSettingMessage(mContext, "SEARCHEI_USERID",
+		// gs.getIMEI(mContext));
 	}
 
 	private void fillAutoTextView() {
@@ -116,11 +124,15 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_search:
-			OfferWall wall1 = new OfferWall(mContext);
+			OfferWall wall1 = new OfferWall(mContext,
+					SystemSettings.getSettingMessage(mContext,
+							"SEARCHEI_USERID", ""));
 			wall1.checkWall(mContext);
 			break;
 		case R.id.menu_getscore:
-			OfferWall wall = new OfferWall(mContext);
+			OfferWall wall = new OfferWall(mContext,
+					SystemSettings.getSettingMessage(mContext,
+							"SEARCHEI_USERID", ""));
 			wall.wallGet();
 			break;
 		case R.id.menu_feedback:
