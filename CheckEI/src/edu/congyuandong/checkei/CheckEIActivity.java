@@ -8,6 +8,7 @@ import com.umeng.fb.FeedbackAgent;
 
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
+import edu.congyuandong.checkei.offerWall.OfferWall;
 import edu.congyuandong.checkei.util.SystemSettings;
 import android.os.Bundle;
 import android.os.Handler;
@@ -115,8 +116,12 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_search:
+			OfferWall wall1 = new OfferWall(mContext);
+			wall1.checkWall(mContext);
 			break;
 		case R.id.menu_getscore:
+			OfferWall wall = new OfferWall(mContext);
+			wall.wallGet();
 			break;
 		case R.id.menu_feedback:
 			System.out.println("feedback");
