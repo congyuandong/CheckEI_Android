@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.FeedbackAgent;
 
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -37,6 +39,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	private LinearLayout dataLayout;
 	private ScrollView scrollView;
 	private CustomProgressDialog progressDialog = null;
+	private Context mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,14 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.title_bar);
 		viewBind();
+
+		mContext = this;
+		MobclickAgent.updateOnlineConfig(mContext);
+
 		dataLayout.setVisibility(View.GONE);
 		scrollView.setVisibility(View.GONE);
+
+		// 填充自动完成输入框
 		fillAutoTextView();
 	}
 
@@ -92,9 +101,31 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.check_ei, menu);
+		// 这里获取在线数据，从而决定是否启用积分模式
+		String isOnline = MobclickAgent.getConfigParams(mContext, "isOnline");
+		if (isOnline.equals("off")) {
+			getMenuInflater().inflate(R.menu.check_ei_off, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.check_ei_on, menu);
+		}
 		return true;
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_search:
+			break;
+		case R.id.menu_getscore:
+			break;
+		case R.id.menu_feedback:
+			System.out.println("feedback");
+			FeedbackAgent agent = new FeedbackAgent(mContext);
+			agent.startFeedbackActivity();
+			break;
+		}
+		return true;
+	};
 
 	@Override
 	public void onClick(View v) {
@@ -226,7 +257,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	//增加Umeng统计组建
+	// 增加Umeng统计组建
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);

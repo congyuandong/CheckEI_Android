@@ -13,4 +13,10 @@
     <string name="docType">Document type</string>
     <string name="conName">Conference name</string>
 
+    <string name="menu_search">积分查询</string>
+    <string name="menu_getscore">积分获取</string>
+    <string name="feedback">用户反馈</string>
+    
+    
+    
 </resources>
