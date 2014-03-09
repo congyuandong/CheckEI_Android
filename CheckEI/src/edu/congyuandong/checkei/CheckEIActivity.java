@@ -3,6 +3,8 @@ package edu.congyuandong.checkei;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.umeng.analytics.MobclickAgent;
+
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
 import edu.congyuandong.checkei.util.SystemSettings;
@@ -222,5 +224,16 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}
+	}
+
+	//增加Umeng统计组建
+	public void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 }
