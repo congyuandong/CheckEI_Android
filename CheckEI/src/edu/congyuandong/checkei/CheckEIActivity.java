@@ -9,12 +9,12 @@ import com.umeng.fb.FeedbackAgent;
 import edu.congyuandong.checkei.ProgressDialog.CustomProgressDialog;
 import edu.congyuandong.checkei.httprequest.DoPost;
 import edu.congyuandong.checkei.offerWall.OfferWall;
-import edu.congyuandong.checkei.util.GetStatus;
 import edu.congyuandong.checkei.util.SystemSettings;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -42,6 +41,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	private ScrollView scrollView;
 	private CustomProgressDialog progressDialog = null;
 	private Context mContext;
+	private OfferWall wall;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,10 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 		mContext = this;
 		MobclickAgent.updateOnlineConfig(mContext);
+		wall = new OfferWall(mContext);
+
+		// 将积分数据存储在本地
+		// wall.checkWall(mContext);
 
 		dataLayout.setVisibility(View.GONE);
 		scrollView.setVisibility(View.GONE);
@@ -61,10 +65,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		// 填充自动完成输入框
 		fillAutoTextView();
 
-		GetStatus gs = new GetStatus();
-		SystemSettings.setSettingMessage(mContext, "SEARCHEI_USERID",
-				gs.getIMEI(mContext)+"_EIS");
-		//System.out.println(gs.getIMEI(mContext));
+		// System.out.println(gs.getIMEI(mContext));
 		// SystemSettings.setSettingMessage(mContext, "SEARCHEI_USERID",
 		// gs.getIMEI(mContext));
 	}
@@ -124,15 +125,11 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_search:
-			OfferWall wall1 = new OfferWall(mContext,
-					SystemSettings.getSettingMessage(mContext,
-							"SEARCHEI_USERID", ""));
-			wall1.checkWall(mContext);
+			// OfferWall wall1 = new OfferWall(mContext);
+			wall.checkWall(mContext);
 			break;
 		case R.id.menu_getscore:
-			OfferWall wall = new OfferWall(mContext,
-					SystemSettings.getSettingMessage(mContext,
-							"SEARCHEI_USERID", ""));
+			// OfferWall wall = new OfferWall(mContext);
 			wall.wallGet();
 			break;
 		case R.id.menu_feedback:
@@ -272,6 +269,25 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}
+	}
+
+	private long exitTime = 0;
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			if ((System.currentTimeMillis() - exitTime) > 2000) {
+				Toast.makeText(getApplicationContext(), "再按一次退出程序",
+						Toast.LENGTH_SHORT).show();
+				exitTime = System.currentTimeMillis();
+			} else {
+				finish();
+				System.exit(0);
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	// 增加Umeng统计组建

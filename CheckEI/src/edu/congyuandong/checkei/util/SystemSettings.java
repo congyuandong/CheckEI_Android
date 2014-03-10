@@ -44,13 +44,13 @@ public class SystemSettings {
 		editor.commit();
 	}
 
-	private static Integer getSettingMessage(Context ctx, String key,
+	public static Integer getSettingMessage(Context ctx, String key,
 			int defaultVaule) {
 		SharedPreferences settings = getSharePreferences(ctx);
 		return settings.getInt(key, defaultVaule);
 	}
 
-	private static void setSettingMessage(Context ctx, String key, int value) {
+	public static void setSettingMessage(Context ctx, String key, int value) {
 		SharedPreferences.Editor editor = getSharePreferencesEditor(ctx);
 		editor.putInt(key, value);
 		editor.commit();

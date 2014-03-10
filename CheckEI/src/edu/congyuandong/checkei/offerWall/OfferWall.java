@@ -7,6 +7,7 @@ import android.widget.Toast;
 import cn.domob.data.OErrorInfo;
 import cn.domob.data.OManager;
 import cn.domob.data.OManager.ConsumeStatus;
+import edu.congyuandong.checkei.util.SystemSettings;
 
 public class OfferWall {
 
@@ -14,8 +15,9 @@ public class OfferWall {
 	//private static final String userId = "1";
 	private OManager mManager;
 
-	public OfferWall(Context mContext,String userId) {
-		mManager = new OManager(mContext, PUBLISHID, userId);
+	public OfferWall(Context mContext) {
+		//mManager = new OManager(mContext, PUBLISHID, userId);
+		mManager = new OManager(mContext,PUBLISHID);
 	}
 
 	// 获取积分
@@ -92,6 +94,8 @@ public class OfferWall {
 			public void onCheckPointsSucess(final int point, final int consumed) {
 				Log.v("wall_log", "总积分：" + point + "总消费积分：" + consumed);
 			    showToast("剩余积分：" + point + " 消费积分：" + consumed,ctx);
+			    //存储积分信息
+			    //SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
 			}
 
 			@Override
