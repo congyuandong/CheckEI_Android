@@ -42,6 +42,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	private CustomProgressDialog progressDialog = null;
 	private Context mContext;
 	private OfferWall wall;
+	private int SCORE = 50;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,10 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 		// 将积分数据存储在本地
 		// wall.checkWall(mContext);
-
+		
+		//初始值
+		if(SystemSettings.getSettingMessage(mContext, "EISEARCH_SCORE", -1)==-1)
+			SystemSettings.setSettingMessage(mContext, "EISEARCH_SCORE", 50);
 		dataLayout.setVisibility(View.GONE);
 		scrollView.setVisibility(View.GONE);
 
@@ -147,15 +151,37 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		case R.id.btn_search:
 			// 隐藏键盘
 			hideInput();
-			// 加载进度条
-			startProcessDialog();
+			
 			// 保存历史查询数据
 			String search = searchWord1.getText().toString();
 			saveSearchWord(search);
 			fillAutoTextView();
-			Thread getData_thread = new Thread(getData);
-			getData_thread.start();
-			break;
+
+			// 这里获取在线数据，从而决定是否启用积分模式
+			String isOnline = MobclickAgent.getConfigParams(mContext,
+					"isOnline");
+			if (isOnline.equals("on")) {
+				int lastScore = SystemSettings.getSettingMessage(mContext, "EISEARCH_SCORE", 0);
+				System.out.println("lastScore:"+lastScore);
+				if(lastScore<SCORE){
+					showMsg("查询积分不足啦，请点击菜单键查询积分");
+				}else{
+				// 加载进度条
+				startProcessDialog();
+				Thread getData_thread = new Thread(getData);
+				getData_thread.start();
+				}
+				break;
+
+			} else {
+				
+				// 加载进度条
+				startProcessDialog();
+				Thread getData_thread = new Thread(getData);
+				getData_thread.start();
+				break;
+			}
+
 		}
 	};
 
@@ -178,6 +204,12 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					//查询成功，扣除积分
+					showMsg("查询成功,消耗积分"+SCORE);
+					wall.wallUse(SCORE, mContext);
+					
+					
 				} else {
 					stopProcessDialog();
 					showMsg("似乎还没有您要找的信息");
@@ -238,7 +270,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 	}
 
 	private void myToast(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 
 	/**

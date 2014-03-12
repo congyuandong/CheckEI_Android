@@ -44,7 +44,7 @@ public class OfferWall {
 	}
 
 	// 使用积分
-	public void wallUse(int score) {
+	public void wallUse(final int score,final Context ctx) {
 		mManager.setConsumeListener(new OManager.ConsumeListener() {
 
 			@Override
@@ -62,10 +62,13 @@ public class OfferWall {
 				case SUCCEED:
 					Log.v("wall_log", "消费成功:" + "总积分：" + point + "总消费积分："
 							+ consumed);
+					showToast("查询成功,消耗积分"+score+" 剩余积分"+point,ctx);
+					SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
 					break;
 				case OUT_OF_POINT:
 					Log.v("wall_log", "总积分不足，消费失败：" + "总积分：" + point + "总消费积分："
 							+ consumed);
+					showToast("查询积分已经不足啦，点击菜单免费获取",ctx);
 					break;
 				case ORDER_REPEAT:
 					Log.v("wall_log", "订单号重复，消费失败：" + "总积分：" + point + "总消费积分："
@@ -95,7 +98,7 @@ public class OfferWall {
 				Log.v("wall_log", "总积分：" + point + "总消费积分：" + consumed);
 			    showToast("剩余积分：" + point + " 消费积分：" + consumed,ctx);
 			    //存储积分信息
-			    //SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
+			    SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
 			}
 
 			@Override
