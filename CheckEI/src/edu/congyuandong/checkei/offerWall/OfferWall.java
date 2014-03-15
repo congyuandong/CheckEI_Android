@@ -11,7 +11,7 @@ import edu.congyuandong.checkei.util.SystemSettings;
 
 public class OfferWall {
 
-	private static final String PUBLISHID = "96ZJ2b8QzehB3wTAwQ";
+	private static final String PUBLISHID = "96ZJ0ucAze/y7wTAW5";
 	//private static final String userId = "1";
 	private OManager mManager;
 
@@ -62,8 +62,8 @@ public class OfferWall {
 				case SUCCEED:
 					Log.v("wall_log", "消费成功:" + "总积分：" + point + "总消费积分："
 							+ consumed);
-					showToast("查询成功,消耗积分"+score+" 剩余积分"+point,ctx);
-					SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
+					showToast("查询成功,消耗积分"+score+" 剩余积分"+(point-consumed),ctx);
+					SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point-consumed);
 					break;
 				case OUT_OF_POINT:
 					Log.v("wall_log", "总积分不足，消费失败：" + "总积分：" + point + "总消费积分："
@@ -96,9 +96,9 @@ public class OfferWall {
 			@Override
 			public void onCheckPointsSucess(final int point, final int consumed) {
 				Log.v("wall_log", "总积分：" + point + "总消费积分：" + consumed);
-			    showToast("剩余积分：" + point + " 消费积分：" + consumed,ctx);
+			    showToast("剩余积分：" + (point-consumed) + " 消费积分：" + consumed,ctx);
 			    //存储积分信息
-			    SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point);
+			    SystemSettings.setSettingMessage(ctx, "EISEARCH_SCORE", point-consumed);
 			}
 
 			@Override

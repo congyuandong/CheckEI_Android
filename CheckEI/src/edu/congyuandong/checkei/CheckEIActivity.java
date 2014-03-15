@@ -59,10 +59,10 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 
 		// 将积分数据存储在本地
 		// wall.checkWall(mContext);
-		
-		//初始值
-		if(SystemSettings.getSettingMessage(mContext, "EISEARCH_SCORE", -1)==-1)
-			SystemSettings.setSettingMessage(mContext, "EISEARCH_SCORE", 50);
+
+		// 设置查询次数
+		if (SystemSettings.getSettingMessage(mContext, "EISEARCH_TIMES", -1) == -1)
+			SystemSettings.setSettingMessage(mContext, "EISEARCH_TIMES", 0);
 		dataLayout.setVisibility(View.GONE);
 		scrollView.setVisibility(View.GONE);
 
@@ -151,7 +151,7 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 		case R.id.btn_search:
 			// 隐藏键盘
 			hideInput();
-			
+
 			// 保存历史查询数据
 			String search = searchWord1.getText().toString();
 			saveSearchWord(search);
@@ -160,21 +160,27 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 			// 这里获取在线数据，从而决定是否启用积分模式
 			String isOnline = MobclickAgent.getConfigParams(mContext,
 					"isOnline");
+			int Search_time = SystemSettings.getSettingMessage(mContext,
+					"EISEARCH_TIMES", 0);
 			if (isOnline.equals("on")) {
-				int lastScore = SystemSettings.getSettingMessage(mContext, "EISEARCH_SCORE", 0);
-				System.out.println("lastScore:"+lastScore);
-				if(lastScore<SCORE){
+				int lastScore = SystemSettings.getSettingMessage(mContext,
+						"EISEARCH_SCORE", 0);
+				System.out.println("lastScore:" + lastScore);
+				if (lastScore < SCORE && Search_time >= 2) {
 					showMsg("查询积分不足啦，请点击菜单键查询积分");
-				}else{
-				// 加载进度条
-				startProcessDialog();
-				Thread getData_thread = new Thread(getData);
-				getData_thread.start();
+				} else {
+					Search_time++;
+					SystemSettings.setSettingMessage(mContext,
+							"EISEARCH_TIMES", Search_time);
+					// 加载进度条
+					startProcessDialog();
+					Thread getData_thread = new Thread(getData);
+					getData_thread.start();
 				}
 				break;
 
 			} else {
-				
+
 				// 加载进度条
 				startProcessDialog();
 				Thread getData_thread = new Thread(getData);
@@ -204,12 +210,16 @@ public class CheckEIActivity extends Activity implements OnClickListener {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					//查询成功，扣除积分
-					showMsg("查询成功,消耗积分"+SCORE);
+
+					// 查询成功，扣除积分
+					String isOnline = MobclickAgent.getConfigParams(mContext,
+							"isOnline");
+					int Search_time = SystemSettings.getSettingMessage(
+							mContext, "EISEARCH_TIMES", 0);
+					if(isOnline.equals(""))
+					showMsg("查询成功,消耗积分" + SCORE);
 					wall.wallUse(SCORE, mContext);
-					
-					
+
 				} else {
 					stopProcessDialog();
 					showMsg("似乎还没有您要找的信息");
